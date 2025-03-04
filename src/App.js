@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import logo from './logo.svg';
 import './App.css';
-import EmployeeForm from './components/EmployeeForm';  // ✅ Import Employee Form
+import EmployeeForm from './components/EmployeeForm';
 
 function Home() {
     return <h2>Home Page</h2>;
@@ -13,6 +13,22 @@ function About() {
 }
 
 function App() {
+    const [employees, setEmployees] = useState([]);
+
+    useEffect(() => {
+        const storedEmployees = localStorage.getItem("employees");
+        if (storedEmployees) {
+            setEmployees(JSON.parse(storedEmployees));
+        }
+    }, []);
+
+    const addEmployee = (newEmployee) => {
+        const updatedEmployees = [...employees, newEmployee];
+        setEmployees(updatedEmployees);
+
+        localStorage.setItem("employees", JSON.stringify(updatedEmployees));
+    };
+
     return (
         <Router>
             <div className="App">
@@ -25,7 +41,7 @@ function App() {
                         <ul>
                             <li><Link to="/">Home</Link></li>
                             <li><Link to="/about">About</Link></li>
-                            <li><Link to="/employee-form">Employee Form</Link></li>  {/* ✅ New Employee Form Link */}
+                            <li><Link to="/employee-form">Employee Form</Link></li>
                         </ul>
                     </nav>
 
@@ -33,17 +49,17 @@ function App() {
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/about" element={<About />} />
-                        <Route path="/employee-form" element={<EmployeeForm />} />  {/* ✅ New Route */}
+                        <Route path="/employee-form" element={<EmployeeForm onAddEmployee={addEmployee} />} />
                     </Routes>
 
-                    <a
-                        className="App-link"
-                        href="https://reactjs.org"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Learn React
-                    </a>
+                    <h2>Employee List</h2>
+                    <ul>
+                        {employees.map((employee, index) => (
+                            <li key={index}>
+                                {employee.name} - {employee.email} - {employee.title} - {employee.department}
+                            </li>
+                        ))}
+                    </ul>
                 </header>
             </div>
         </Router>
@@ -51,4 +67,3 @@ function App() {
 }
 
 export default App;
-
