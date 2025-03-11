@@ -11,7 +11,7 @@ function EmployeeForm({ onAddEmployee }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (employee.name && employee.email && employee.title && employee.department) {
-            onAddEmployee(employee); // ✅ Send data to `App.js`
+            onAddEmployee(employee); 
             setEmployee({ name: "", email: "", title: "", department: "" }); // Reset form
         }
     };
