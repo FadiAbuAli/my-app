@@ -1,26 +1,33 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import "../EmployeeForm.css";
+import React, { useContext } from 'react';
+import { EmployeeContext } from '../context/EmployeeContext';
+import '../EmployeeForm.css';
 
-function EmployeeList({ employees }) {
-  return (
-    <div className="employee-list">
-      <h1>Employee List</h1>
-      <ul>
-        {employees.length > 0 ? (
-          employees.map((employee, index) => (
-            <li key={index}>
-              <Link to={`/employees/${index}`}>
-                {employee.name} - {employee.title}
-              </Link>
-            </li>
-          ))
-        ) : (
-          <p>No employees found. Add some employees!</p>
-        )}
-      </ul>
-    </div>
-  );
-}
+const EmployeeList = () => {
+    const { employees, setEmployees } = useContext(EmployeeContext);
+
+    // Function to delete an employee
+    const deleteEmployee = (index) => {
+        const updatedEmployees = employees.filter((_, i) => i !== index);
+        setEmployees(updatedEmployees);
+    };
+
+    return (
+        <div className="employee-list">
+            <h2>Employee List</h2>
+            {employees.length > 0 ? (
+                <ul>
+                    {employees.map((employee, index) => (
+                        <li key={index}>
+                            {employee.name} - {employee.title}
+                            <button onClick={() => deleteEmployee(index)}>Delete</button>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p>No employees added yet.</p>
+            )}
+        </div>
+    );
+};
 
 export default EmployeeList;
